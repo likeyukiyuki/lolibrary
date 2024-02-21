@@ -2,15 +2,17 @@
     <div class="common-layout">
         <el-container>
             <el-header>
-                <div style="width: 500px;float: left;">欢迎━(*｀∀´*)ノ亻!</div>
-                <div id="name" style="font-size: 20px; margin-top: 0px; float: left;">
-                    <h1>{{ name }}</h1>
+                <div id="name" style="font-size: 200%; text-align: center; ">
+                   {{ name }}
+                
                 </div>
             </el-header>
             <el-container>
-                <el-aside width="500px">
-                    <el-image style="width: 300px; height: 400px" :src="url" :fit="fit" />
-
+                <el-aside width="40%">
+                    <el-image style="width: 100%; height: 60%" :src="url" :fit="fit" />
+                
+                    <div style="color: darkgray;">该信息由<b>{{ submitter }}</b>提供,由<b>{{ aduit }}</b>审核</div>
+               
                 </el-aside>
                 <el-main>
                     <div id="item">
@@ -51,7 +53,9 @@
                         <h3>标签</h3>
                         {{ tags }}
                     </div>
+                    
                 </el-main>
+                
             </el-container>
         </el-container>
         <el-container direction="horizontal">
@@ -91,14 +95,18 @@ const tags = ref('')
 const colorway =ref('')
 const note=ref('')
 const data=ref([])
+const submitter=ref('')
+const aduit=ref('')
 
 onBeforeMount(() => {
-    console.log(imageslist)
     detail_search()
 })
 
+
+
 async function detail_search(){
     const route = useRoute()
+    console.log("detail_search route",route.params)
     const id=route.params.id
     let res = await axios.post("http://localhost:8888/detail_search",
         {
@@ -122,8 +130,9 @@ async function detail_search(){
         waist.value=data.value[12]
         length.value=data.value[13]
         note.value=data.value[14]
-        imageslist.value=data.value.slice(15)
-        
+        imageslist.value=data.value.slice(19)
+        aduit.value=data.value[16]
+        submitter.value=data.value[18]
     }
 }
 

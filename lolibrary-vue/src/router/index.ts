@@ -2,7 +2,7 @@ import { createRouter, createWebHistory,type RouteRecordRaw } from 'vue-router'
  
 const routes: Array<RouteRecordRaw> = [
     {
-      path: '/',
+      path: '/', 
       redirect: '/Search'
     },
     {
@@ -12,14 +12,16 @@ const routes: Array<RouteRecordRaw> = [
       component: () => import('../views/search.vue')
     },
     {
-      path: '/Adminstration/:user',
+      path: '/Adminstration',
       name: '/Adminstration',
-      component: () => import('../views/Adminstration.vue')
+      component: () => import('../views/Adminstration.vue'),
+      props: { default: true, sidebar: false }
     },
     {
       path: '/detail/:id',
       name: '/detail',
-      component: () => import('../views/detail.vue')
+      component: () => import('../views/detail.vue'),
+      props: { default: true, sidebar: false }
     }, {
       path: '/login',
       name: '/login',
@@ -39,7 +41,8 @@ const routes: Array<RouteRecordRaw> = [
     }, {
       path: '/user/:user',
       name: '/user',
-      component: () => import('../views/user.vue')
+      component: () => import('../views/user.vue'),
+      props: { default: true, sidebar: false }
     }
   
   

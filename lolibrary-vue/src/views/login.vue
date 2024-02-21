@@ -34,7 +34,7 @@ async function login(){
     successful.value = res.data
     if(successful.value=="登录成功"){
       
-    router.push('/Adminstration/'+user.value)
+    router.push({path:'Adminstration',query:{user : user.value}})
 }
   }
 }

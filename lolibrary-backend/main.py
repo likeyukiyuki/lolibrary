@@ -48,7 +48,9 @@ async def insert(fileslist:list[UploadFile]=File(None),name:str=Form(),
                 images:UploadFile=File(),years:str=Form(),
                 product:Optional[str]=Form(None),price:Optional[str]=Form(None),
                 bust:Optional[str]=Form(None),waist:Optional[str]=Form(None),
-                length:Optional[str]=Form(None),note:Optional[str]=Form(None)):
+                length:Optional[str]=Form(None),note:Optional[str]=Form(None),
+                audit:str=Form(),auditor:str=Form(),submit:str=Form(),submitter:str=Form()):
+    
     print(tags)
     id=uuid.uuid1()
     id=str(id)
@@ -56,10 +58,10 @@ async def insert(fileslist:list[UploadFile]=File(None),name:str=Form(),
     with sqlite3.connect('test.db') as conn:
         c=conn.cursor()
         print ("数据库打开成功")
-
+        print(auditor)
         c.execute(
-            "insert into dress(id,name,category,brand,colorway,features,tags,images,years,product,price,bust,waist,length,note) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (id,name,category,brand,colorway,features,tags,data,years,product,price,bust,waist,length,note)
+            "insert into dress(id,name,category,brand,colorway,features,tags,images,years,product,price,bust,waist,length,note,audit,auditor,submit,submitter) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (id,name,category,brand,colorway,features,tags,data,years,product,price,bust,waist,length,note,audit,auditor,submit,submitter)
         )
         if fileslist!=None:
              for files in fileslist:
@@ -141,7 +143,7 @@ async def detail_search(info:detail_searchInfo):
     img=data[7]
     strimg=base64.b64encode(img).decode('utf-8')
     strimg='data:image/png;base64,'+strimg
-    rtdata=data[0:7]+(strimg,)+data[8:15]
+    rtdata=data[0:7]+(strimg,)+data[8:19]
     print(len(data))
     print(len(images))
     for irow in images:

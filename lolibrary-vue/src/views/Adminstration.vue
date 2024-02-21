@@ -74,7 +74,7 @@
             {{ successful }}
             <Router-Link to="/delete">点击进行删除</Router-Link>
             
-            <button @click="a">a</button>
+           
         </el-main>
       </el-container>
     </el-container>
@@ -90,12 +90,7 @@ import axios from 'axios';
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 import {useRoute} from 'vue-router';
 
-function a(){
-  const route = useRoute()
-  console.log(route)
-  const id=route.params.user
-  console.log(id)
-}
+
 
 
 const dialogImageUrl = ref('')
@@ -204,10 +199,14 @@ function click() {
 }
 
 
-
-
+  
+const route = useRoute()
 async function insert() {
+  console.log("route:",route)
+  const user =route.query.user?.toString() as string
   let f = new FormData();
+  let aduit="1"
+  let submit="1"
   rawfiles.value.forEach(
     (x) => f.append("fileslist", x as Blob)
   )
@@ -226,6 +225,10 @@ async function insert() {
   f.append("waist", waist.value)
   f.append("length", length.value)
   f.append("note", note.value)
+  f.append("audit",aduit)
+  f.append("auditor",user)
+  f.append("submit",submit)
+  f.append("submitter",user)
 
 
   let res = await axios.post("http://localhost:8888/insert", f, {
