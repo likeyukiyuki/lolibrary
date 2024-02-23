@@ -3,21 +3,21 @@
         <el-container>
             <el-header>
                 <div id="name" style="font-size: 200%; text-align: center; ">
-                   {{ name }}
-                
+                    {{ name }}
+
                 </div>
             </el-header>
             <el-container>
                 <el-aside width="40%">
                     <el-image style="width: 100%; height: 60%" :src="url" :fit="fit" />
-                
+
                     <div style="color: darkgray;">该信息由<b>{{ submitter }}</b>提供,由<b>{{ aduit }}</b>审核</div>
-               
+
                 </el-aside>
                 <el-main>
                     <div id="item">
                         <h3>详细信息</h3><br />
-                        发售于{{ year}} 年
+                        发售于{{ year }} 年
                         <br>
                         生产编号：{{ product }}
                         <br>
@@ -53,9 +53,9 @@
                         <h3>标签</h3>
                         {{ tags }}
                     </div>
-                    
+
                 </el-main>
-                
+
             </el-container>
         </el-container>
         <el-container direction="horizontal">
@@ -64,9 +64,17 @@
                     <el-image style="width: 150px; height: 200px" :src="item" :fit="fit"></el-image>
 
                 </div>
-            </el-footer>
-        </el-container>
 
+            </el-footer>
+
+        </el-container>
+        <div style="margin: auto;">
+            <el-button :style="{ color: buttonTextColor }" style="float: left;" @click="audit()">点击通过审核</el-button>
+            <div v-if="buttonTextColor == 'green'">
+                <el-button type="success" :icon="Check" circle />
+            </div>
+        </div>
+        {{ maessage }}
     </div>
 </template>
   
@@ -74,17 +82,24 @@
 import axios from 'axios';
 import { onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
-
+import {
+    Check,
+    Delete,
+    Edit,
+    Message,
+    Search,
+    Star,
+} from '@element-plus/icons-vue'
 const fit = "fill"
 const url = ref('')
 
 const imageslist = ref([])
 const name = ref("")
-
-const successful=ref([])
-const year=ref('')
-const product=ref('')
-const price=ref('')
+const maessage=ref("")
+const successful = ref([])
+const year = ref('')
+const product = ref('')
+const price = ref('')
 const bust = ref('')
 const length = ref('')
 const waist = ref('')
@@ -92,50 +107,71 @@ const brand = ref('')
 const category = ref('')
 const features = ref('')
 const tags = ref('')
-const colorway =ref('')
-const note=ref('')
-const data=ref([])
-const submitter=ref('')
-const aduit=ref('')
-
+const colorway = ref('')
+const note = ref('')
+const data = ref([])
+const submitter = ref('')
+const aduit = ref('')
+const route = useRoute()
 onBeforeMount(() => {
     detail_search()
 })
 
 
+const buttonTextColor = ref('black');
 
-async function detail_search(){
-    const route = useRoute()
-    console.log("detail_search route",route.params)
-    const id=route.params.id
+const changeColor = () => {
+    buttonTextColor.value = 'green'; // 改变按钮文字颜色为绿色
+};
+
+async function detail_search() {
+   
+    console.log("detail_search route", route.params)
+    const id = route.params.id
     let res = await axios.post("http://localhost:8888/detail_search",
         {
-        id: id,
+            id: id,
         }
     )
     if (res.status == 200) {
         successful.value = res.data
-        data.value=successful.value
-        name.value=data.value[1]
-        category.value=data.value[2]
-        brand.value=data.value[3]
-        colorway.value=data.value[4]
-        features.value=data.value[5]
-        tags.value=data.value[6]
-        url.value=data.value[7]
-        year.value=data.value[8]
-        product.value=data.value[9]
-        price.value=data.value[10]
-        bust.value=data.value[11]
-        waist.value=data.value[12]
-        length.value=data.value[13]
-        note.value=data.value[14]
-        imageslist.value=data.value.slice(19)
-        aduit.value=data.value[16]
-        submitter.value=data.value[18]
+        data.value = successful.value
+        name.value = data.value[1]
+        category.value = data.value[2]
+        brand.value = data.value[3]
+        colorway.value = data.value[4]
+        features.value = data.value[5]
+        tags.value = data.value[6]
+        url.value = data.value[7]
+        year.value = data.value[8]
+        product.value = data.value[9]
+        price.value = data.value[10]
+        bust.value = data.value[11]
+        waist.value = data.value[12]
+        length.value = data.value[13]
+        note.value = data.value[14]
+        imageslist.value = data.value.slice(19)
+        aduit.value = data.value[16]
+        submitter.value = data.value[18]
     }
 }
+async function audit() {
 
+    const id = route.params.id
+    const auditor=route.params.user
+    console.log("a",auditor)
+    let res = await axios.post("http://localhost:8888/audit",
+        {
+            id: id,
+            auditor:auditor
+        }
+    )
+    if (res.status == 200) {
+        maessage.value=res.data
+        changeColor()
+    } 
+   
+    }
 </script>
 
 

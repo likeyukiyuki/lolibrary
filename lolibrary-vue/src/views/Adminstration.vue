@@ -1,101 +1,172 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-header>
-        欢迎来到管理页面
-      </el-header>
-      <el-container>
+  <el-container>
 
-        <el-aside width="30%">
+    <el-aside width="15%">
+      <el-menu :router="true" ellipsis="false" active-text-color="#ffd04b" background-color="#fff">
+        <el-menu-item @click="selectMenuItem('upload')">
+          <span>上传信息</span>
+        </el-menu-item>
+        <el-menu-item @click="selectMenuItem('audit')">
+          <span>审核信息</span>
+        </el-menu-item>
+        <el-menu-item index="/delete">
+          <span>删除信息</span>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+    <el-main>
+      <div v-if="selectedMenuItem === 'upload'">
+        <el-row>
+          <el-card class="box-card" style="width: 45%; ">
+            <template #header>
+              <div class="card-header">
+                <span>请添加基本信息</span>
+              </div>
+            </template>
+            <label>名字：</label>
+            <br>
+            <el-input :required="true" v-model="name" placeholder="Please input name" style="width: 60%;" /><label
+              style="color: rgb(227, 72, 72);">*必填</label>
+            <br>
+            <label>类别:</label>
+            <br>
+            <el-input :required="true" v-model="category" placeholder="Please input category" style="width: 60%;" /><label
+              style="color: rgb(227, 72, 72);">*必填</label>
+            <br>
+            <label>品牌：</label>
+            <br>
+            <el-input :required="true" v-model="brand" placeholder="Please input Brand" style="width: 60%;" /><label
+              style="color: rgb(227, 72, 72);">*必填</label>
+            <br>
+            <label>颜色：</label>
+            <br>
+            <el-input :required="true" v-model="colorway" placeholder="Please input colorway" style="width: 60%;" /><label
+              style="color: rgb(227, 72, 72);">*必填</label>
+            <br>
+            <label>特征:</label>
+            <br>
+            <el-input v-model="features" placeholder="Please input Features" style="width: 60%;" />
+            <br>
+            <label>标签：</label>
+            <br>
+            <el-input v-model="tags" placeholder="Please input Tags" style="width: 60%;" />
+            <br><label>主图：</label><br>
+            <el-upload :class="{ disabled: noUpload }" action="http://localhost:8888/insert" :auto-upload="false"
+              list-type="picture-card" :on-preview="handlePictureCardPreview" :on-change="checkImageFormat"
+              :on-remove="handleRemove" :limit="1" ref="businessLicense" :file-list="faceList">
+              <el-icon v-if="faceList.length == 0">
+                <Plus />
+              </el-icon>
+            </el-upload> <label style="color: rgb(227, 72, 72);">*必填</label>
+            <el-dialog v-model="dialogVisible">
+              <img w-full :src="dialogImageUrl" alt="Preview Image" />
+            </el-dialog>
+            <br>
+          </el-card>
 
-          <h1>请添加信息</h1>
+          <el-card class="box-card" style="width: 50%; ">
+            <template #header>
+              <div class="card-header">
+                <span>请添加详细信息</span>
+              </div>
+            </template>
+            <label>年份:</label>
+            <el-date-picker v-model="value3" type="year" />
+            <br><label>生产编号：</label>
+            <el-input v-model="product" style="width: 30%;" />
 
-          <el-input :required="true" v-model="name" placeholder="Please input name" style="width: 80%;" /><label
-            style="color: rgb(227, 72, 72);">*必填</label>
-          <br>
-          <el-input :required="true" v-model="category" placeholder="Please input category" style="width: 80%;" /><label
-            style="color: rgb(227, 72, 72);">*必填</label>
-          <br>
-          <el-input :required="true" v-model="brand" placeholder="Please input Brand" style="width: 80%;" /><label
-            style="color: rgb(227, 72, 72);">*必填</label>
-          <br>
-          <el-input :required="true" v-model="colorway" placeholder="Please input colorway" style="width: 80%;" /><label
-            style="color: rgb(227, 72, 72);">*必填</label>
-          <br>
-          <el-input v-model="features" placeholder="Please input Features" style="width: 80%;" />
-          <br>
-          <el-input v-model="tags" placeholder="Please input Tags" style="width: 80%;" />
-
-
-
-
-
-          <el-upload :class="{ disabled: noUpload }" action="http://localhost:8888/insert" :auto-upload="false"
-            list-type="picture-card" :on-preview="handlePictureCardPreview" :on-change="checkImageFormat"
-            :on-remove="handleRemove" :limit="1" ref="businessLicense" :file-list="faceList">
-            <el-icon v-if="faceList.length == 0">
-              <Plus />
-            </el-icon>
-          </el-upload> <label style="color: rgb(227, 72, 72);">*必填</label>
-
-          <el-dialog v-model="dialogVisible">
-            <img w-full :src="dialogImageUrl" alt="Preview Image" />
-          </el-dialog>
-
-          <br>
-          <button @click="click">提交</button>
-        </el-aside>
-        <el-main>
-          <label>添加附加信息</label><br>
-          <label>年份:</label><br>
-          <el-date-picker v-model="value3" type="year" />
-          <br><label>生产编号：</label>
-          <el-input v-model="product" style="width: 30%;" />
-
-          <br><label>发售价格:</label>
-          <el-input v-model="price" style="width: 30%;" />
-          <br><label>添加尺寸信息：</label>
-          <br><label>胸围:</label>
-          <el-input v-model="bust" style="width: 30%;"></el-input>
-          <br><label>腰围:</label>
-          <el-input v-model="waist" style="width: 30%;"></el-input>
-          <br><label>长度:</label>
-          <el-input v-model="length" style="width: 30%;"></el-input>
-          <br><label>添加特殊说明:</label>
-          <el-input v-model="note" style="width: 30%;"></el-input>
-          <br><label>除主图以外的其他图片：</label>
-          <el-upload action="http://localhost:8888/insert" list-type="picture-card" :auto-upload="false"
-            :on-change="flist" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-            <el-icon>
-              <Plus />
-            </el-icon>
-          </el-upload>
-  
-            {{ successful }}
+            <br><label>发售价格:</label>
+            <el-input v-model="price" style="width: 30%;" />
+            <br><label>添加尺寸信息：</label>
+            <br><label>胸围:</label>
+            <el-input v-model="bust" style="width: 30%;"></el-input>
+            <br><label>腰围:</label>
+            <el-input v-model="waist" style="width: 30%;"></el-input>
+            <br><label>长度:</label>
+            <el-input v-model="length" style="width: 30%;"></el-input>
+            <br><label>添加特殊说明:</label>
+            <el-input v-model="note" style="width: 30%;"></el-input>
+            <br><label>除主图以外的其他图片：</label>
+            <el-upload action="http://localhost:8888/insert" list-type="picture-card" :auto-upload="false"
+              :on-change="flist" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+              <el-icon>
+                <Plus />
+              </el-icon>
+            </el-upload>
             <Router-Link to="/delete">点击进行删除</Router-Link>
-            
-           
-        </el-main>
-      </el-container>
-    </el-container>
-  </div>
+          </el-card>
+        </el-row>
+        <el-button @click="click" style="margin-left: 40%;" size="large">
+          点击上传<el-icon class="el-icon--right">
+            <Upload />
+          </el-icon>
+        </el-button>
+        {{ successful }}
+      </div>
+      <div v-if="selectedMenuItem === 'audit'">
+        <div v-if="audit_newdata.length < 1">
+          <el-alert title="当前没有信息需要审核" type="info" />
+        </div>
+        <div v-else>
+          <el-alert title="以下信息需要审核" type="warning" />
+          <el-row>
+            <el-col v-for="data in audit_newdata" :key="data[1]" :span="6" :offset="2"
+              style=" margin-bottom: 5%; margin-left: 5%;">
+              <el-card shadow="always" style="height: 100%; width: 110%;">
+                <div style="padding: 0px;font-size: 100%; ">{{ data[1] }}</div>
+                <el-image style="height: 100%;width: 100%;" :src="data[7]" class="image" />
+                <div style="height: 15%;">
+                  <span style="font-size: 15%;">brand</span>
+                  <span style="font-size: 15%; margin-left: 40%;">category</span>
+
+                  <div style="height: 0%;">
+                    <span style="font-size: 15%;height: 5%;">{{ data[3] }}</span>
+                    <span style="font-size: 15%;margin-left:60%;">{{ data[2] }}</span>
+                    <div style="text-align: center;">
+                      <router-link :to="'/audit/' + data[0] + '/' + user"> <el-button text class="button">点击查看</el-button>
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
+
+      </div>
+     
+    </el-main>
+  </el-container>
 </template>
   
   
 <script lang="ts" setup>
-import { reactive, ref, type Ref } from 'vue'
+import { computed, reactive,onBeforeMount, ref, type Ref } from 'vue'
 import type { FormProps, UploadFile, UploadFiles, UploadProps, UploadRawFile } from 'element-plus'
 import { ElMessage, dateEquals } from 'element-plus'
 import axios from 'axios';
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
+import { Edit, Search, Share, Upload } from '@element-plus/icons-vue'
+import { userInfo } from 'os';
 
 
+const audit_data = ref([])
+const page = ref(1)
 
+const user = ref('')
 
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
 
+onBeforeMount(() => {
+
+const route = useRoute()
+user.value = route.query.user as string
+search_audit()
+
+
+})
 const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
 }
@@ -105,7 +176,10 @@ const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
   dialogVisible.value = true
 }
 
-
+const selectedMenuItem = ref('upload');
+const selectMenuItem = (item: string) => {
+  selectedMenuItem.value = item
+}
 
 const value3: Ref<Date> = ref(new Date())
 const name = ref('')
@@ -199,14 +273,14 @@ function click() {
 }
 
 
-  
+
 const route = useRoute()
 async function insert() {
-  console.log("route:",route)
-  const user =route.query.user?.toString() as string
+  console.log("route:", route)
+  user.value = route.query.user?.toString() as string
   let f = new FormData();
-  let aduit="1"
-  let submit="1"
+  let aduit = "1"
+  let submit = "1"
   rawfiles.value.forEach(
     (x) => f.append("fileslist", x as Blob)
   )
@@ -225,10 +299,10 @@ async function insert() {
   f.append("waist", waist.value)
   f.append("length", length.value)
   f.append("note", note.value)
-  f.append("audit",aduit)
-  f.append("auditor",user)
-  f.append("submit",submit)
-  f.append("submitter",user)
+  f.append("audit", aduit)
+  f.append("auditor", user)
+  f.append("submit", submit)
+  f.append("submitter", user)
 
 
   let res = await axios.post("http://localhost:8888/insert", f, {
@@ -244,6 +318,21 @@ async function insert() {
   }
 
 }
+async function search_audit() {
+  let res = await axios.post("http://localhost:8888/search_audit",
+    {
+      user: user.value,
+    }
+  )
+  if (res.status == 200) {
+    audit_data.value = res.data
+  }
+}
+
+const audit_newdata = computed(() => {
+  return audit_data.value.slice((page.value - 1) * 10, page.value * 10 - 1)
+
+})
 </script>
 
 <style scoped>

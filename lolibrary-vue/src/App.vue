@@ -17,12 +17,13 @@ const awesome = ref(true)
           <el-menu-item index="/Search">
             <span>查询</span>
           </el-menu-item>
+          <el-menu-item index="/user_login">
+            <span>用户</span>
+          </el-menu-item>
           <el-menu-item index="/login">
             <span>管理</span>
           </el-menu-item>
-          <el-menu-item index="/user_login">
-            <span>用户界面</span>
-          </el-menu-item>
+       
         </el-menu>
       </el-header>
 

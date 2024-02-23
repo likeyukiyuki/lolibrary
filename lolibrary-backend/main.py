@@ -59,6 +59,7 @@ async def insert(fileslist:list[UploadFile]=File(None),name:str=Form(),
         c=conn.cursor()
         print ("数据库打开成功")
         print(auditor)
+       
         c.execute(
             "insert into dress(id,name,category,brand,colorway,features,tags,images,years,product,price,bust,waist,length,note,audit,auditor,submit,submitter) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (id,name,category,brand,colorway,features,tags,data,years,product,price,bust,waist,length,note,audit,auditor,submit,submitter)
@@ -67,8 +68,11 @@ async def insert(fileslist:list[UploadFile]=File(None),name:str=Form(),
              for files in fileslist:
                 print(files)
                 files=files.file.read()
+                image_id=uuid.uuid1()
+                image_id=str(image_id)
+
                 c.execute(
-                    "insert into images(id,images) values(?,?)",(id,files)
+                    "insert into images(id,dress_id,images) values(?,?,?)",(image_id,id,files)
                 )
        
 
@@ -105,7 +109,7 @@ async def name_search(info:name_searchInfo):
     print ("数据库打开成功")
 
     data= c.execute(
-        "select * from dress where name like ? ",('%'+info.onlyname+'%',)
+        "select * from dress where name like ? and audit='1' ",('%'+info.onlyname+'%',)
     ).fetchall()
     conn.commit()
     rtdata=[]
@@ -134,7 +138,7 @@ async def detail_search(info:detail_searchInfo):
         
     ).fetchall()
     images=c.execute(
-        "select images from images where id=?",(info.id,)
+        "select images from images where dress_id=?",(info.id,)
     ).fetchall()
 
     conn.commit()
@@ -167,7 +171,7 @@ async def search(info:searchInfo):
     conn = sqlite3.connect('test.db')
     c=conn.cursor()
     print ("数据库打开成功")
-    sql="select * from dress where 1"
+    sql="select * from dress where audit='1' and 1"
     for (i,j) in slist:
         if j != "":
             sql += f" and {i} = '{j}' "
@@ -264,7 +268,7 @@ async def register(info:registerInfo):
     c=conn.cursor()
     print ("数据库打开成功")
     x: tuple[int] = c.execute(
-        "select count(*) from user where id=?", (info.user,)).fetchone()
+        "select count(*) from user where user=?", (info.user,)).fetchone()
     print(x)
     # 注册
     n = x[0]
@@ -278,6 +282,102 @@ async def register(info:registerInfo):
         print("数据插入成功")
         conn.close()
         return "注册成功~"
+
+class auditor_logininfo(BaseModel):
+    user:str
+@app.post("/auditor_login")
+async def register(info:auditor_logininfo): 
+    print(info.user)
+    conn = sqlite3.connect('test.db')
+    c=conn.cursor()
+    print ("数据库打开成功")
+    c.execute("select adminstration from user where user=?",(info.user,))
+    adminstration=c.fetchone()
+    return adminstration
+
+class statusinfo(BaseModel):
+    user:str
+@app.post("/status_false")
+async def register(info:statusinfo): 
+    print(info.user)
+    conn = sqlite3.connect('test.db')
+    c=conn.cursor()
+    print ("数据库打开成功")
+    c.execute("select * from dress where submit='1' and audit='0' and submitter=? ",(info.user,))
+    data=c.fetchall()
+    conn.commit()
+    rtdata=[]
+    for row in data:
+        img=row[7]
+        strimg=base64.b64encode(img).decode('utf-8')
+        strimg='data:image/png;base64,'+strimg
+        
+        rowdata=row[0:7]+(strimg,)+row[8:15]
+        rtdata.append(rowdata)
+    
+    conn.close()
+    
+    return rtdata
+
+
+@app.post("/status_true")
+async def register(info:statusinfo): 
+    print(info.user)
+    conn = sqlite3.connect('test.db')
+    c=conn.cursor()
+    print ("数据库打开成功")
+    c.execute("select * from dress where submit='1' and audit='1' and submitter=? ",(info.user,))
+    data=c.fetchall()
+    conn.commit()
+    rtdata=[]
+    for row in data:
+        img=row[7]
+        strimg=base64.b64encode(img).decode('utf-8')
+        strimg='data:image/png;base64,'+strimg
+        
+        rowdata=row[0:7]+(strimg,)+row[8:15]
+        rtdata.append(rowdata)
+    
+    conn.close()
+    
+    return rtdata
+
+
+@app.post("/search_audit")
+async def register(): 
+    
+    conn = sqlite3.connect('test.db')
+    c=conn.cursor()
+    print ("数据库打开成功")
+    c.execute("select * from dress where submit='1' and audit='0'")
+    data=c.fetchall()
+    conn.commit()
+    rtdata=[]
+    for row in data:
+        img=row[7]
+        strimg=base64.b64encode(img).decode('utf-8')
+        strimg='data:image/png;base64,'+strimg
+        
+        rowdata=row[0:7]+(strimg,)+row[8:15]
+        rtdata.append(rowdata)
+    
+    conn.close()
+    
+    return rtdata
+class auditinfo(BaseModel):
+    id:str
+    auditor:str
+@app.post("/audit")
+async def register(info:auditinfo): 
+    
+    conn = sqlite3.connect('test.db')
+    c=conn.cursor()
+    print ("数据库打开成功")
+    c.execute("UPDATE dress set audit='1',auditor=? where id=?",(info.auditor,info.id))
+    conn.commit()
+    print("插入成功")
+    return "添加成功~"
+ 
 
 if __name__ == '__main__':
     uvicorn.run(app="main:app", host="127.0.0.1", port=8888, reload=True)

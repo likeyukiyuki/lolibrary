@@ -39,9 +39,14 @@ const routes: Array<RouteRecordRaw> = [
       name: '/register',
       component: () => import('../views/register.vue')
     }, {
-      path: '/user/:user',
+      path: '/user',
       name: '/user',
       component: () => import('../views/user.vue'),
+      props: { default: true, sidebar: false }
+    }, {
+      path: '/audit/:id/:user',
+      name: '/audit',
+      component: () => import('../views/audit.vue'),
       props: { default: true, sidebar: false }
     }
   
