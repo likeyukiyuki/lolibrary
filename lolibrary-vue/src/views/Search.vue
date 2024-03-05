@@ -1,84 +1,103 @@
 <template>
   <div class="common-layout">
     <el-container>
-   
+
       <el-aside width="30%">
         <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>条件查找</span>
-          </div>
-        </template>
-        <label>类型:</label>
-        <el-select v-model="v_category" clearable allow-create="true" filterable placeholder="选择类型">
-          <el-option v-for="item in category" :key="item.value" :value="item.value" />
-        </el-select>
-        <br>
-        <br>
-        <label>品牌:</label>
-        <el-select v-model="v_brand" clearable allow-create="true" filterable placeholder="选择品牌" >
-          <el-option v-for="item in brand" :key="item.value" :value="item.value" />
-        </el-select>
-        <br>
-        <br>
-        <label>特点:</label>
-        <el-select v-model="v_features" clearable allow-create="true" filterable placeholder="选择特点">
-          <el-option v-for="item in features" :key="item.value" :value="item.value" />
-        </el-select>
-        <br>
-        <br>
-        <label>配色:</label>
-        <el-select v-model="v_colorway" clearable allow-create="true" filterable placeholder="选择配色">
-          <el-option v-for="item in colorway" :key="item.value" :value="item.value" />
-        </el-select>
-        <br>
-        <br>
-        <label>标签:</label>
-        <el-select v-model="v_tags" clearable allow-create="true" filterable placeholder="选择标签" >
-          <el-option v-for="item in tags" :key="item.value" :value="item.value" />
-        </el-select>
-        <br>
-        <br>
-        <label>年份:</label>
-        <el-select v-model="years" clearable allow-create="true" filterable placeholder="选择年份" >
-          <el-option v-for="item in getyears" :key="item.value" :value="item.value" />
-        </el-select>
-      </el-card>
+          <template #header>
+            <div class="card-header">
+              <span>条件查找</span>
+            </div>
+          </template>
+          <label>类型:</label>
+          <el-select v-model="v_category" clearable allow-create="true" filterable placeholder="选择类型">
+            <el-option v-for="item in category" :key="item.value" :value="item.value" />
+          </el-select>
+          <br>
+          <br>
+          <label>品牌:</label>
+          <el-select v-model="v_brand" clearable allow-create="true" filterable placeholder="选择品牌">
+            <el-option v-for="item in brand" :key="item.value" :value="item.value" />
+          </el-select>
+          <br>
+          <br>
+          <label>特点:</label>
+          <el-select v-model="v_features" clearable allow-create="true" filterable placeholder="选择特点">
+            <el-option v-for="item in features" :key="item.value" :value="item.value" />
+          </el-select>
+          <br>
+          <br>
+          <label>配色:</label>
+          <el-select v-model="v_colorway" clearable allow-create="true" filterable placeholder="选择配色">
+            <el-option v-for="item in colorway" :key="item.value" :value="item.value" />
+          </el-select>
+          <br>
+          <br>
+          <label>标签:</label>
+          <el-select v-model="v_tags" clearable allow-create="true" filterable placeholder="选择标签">
+            <el-option v-for="item in tags" :key="item.value" :value="item.value" />
+          </el-select>
+          <br>
+          <br>
+          <label>年份:</label>
+          <el-select v-model="years" clearable allow-create="true" filterable placeholder="选择年份">
+            <el-option v-for="item in getyears" :key="item.value" :value="item.value" />
+          </el-select>
+        </el-card>
 
       </el-aside>
 
       <el-main>
-        <el-input v-model="name" placeholder="Please input name" />
-        <button @click="name_search">查询</button>
         <el-row>
-          <el-col v-for="data in newdata " :key="data[1]" :span="6" :offset="2"
-            style=" margin-bottom: 5%; margin-left: 5%;">
-            <el-card shadow="always" style="height: 100%; width: 110%;">
-              <div style="padding: 0px;font-size: 100%; ">{{ data[1] }}</div>
-              <el-image style="height: 100%;width: 100%;" :src="data[7]" class="image" />
-              <div style="height: 15%;">
-                <span style="font-size: 15%;">brand</span>
-                <span style="font-size: 15%; margin-left: 40%;">category</span>
+          <el-col  :xs="22" :sm="12" :md="12" :lg="22" :xl="1">
+             <el-input v-model="name" placeholder="Please input name" />
+          </el-col>
+          <el-col  :xs="2" :sm="12" :md="12" :lg="2" :xl="1">
+            <button @click="name_search">查询</button>
+          </el-col>
+        
+        </el-row>
+        
+        <el-row>
+          <el-col v-for="data in newdata " :key="data[1]" :offset="0.5" :xs="15" :sm="12" :md="10" :lg="7" :xl="1">
+            <el-card shadow="always" class="card">
+              <div style=" text-align: center;">{{ data[1] }}</div>
+              <el-image :src="data[7]" class="image" />
+              <el-row :gutter="2">
+                <el-col  class="color"  :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                  <div>brand</div>
+                </el-col>
+                <el-col  class="color"  :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                  <div>category</div>
+                </el-col>
+              </el-row>
+              <el-row :gutter="2">
+                <el-col  :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                  <div>{{ data[3] }}</div>
+                </el-col>
+                <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                  <div>{{ data[2] }}</div>
+                </el-col>
+              </el-row>
+              <div style="text-align: center;">
 
-                <div style="height: 0%;">
-                  <span style="font-size: 15%;height: 5%;">{{ data[3] }}</span>
-                  <span style="font-size: 15%;margin-left:60%;">{{ data[2] }}</span>
-                  <div style="text-align: center;">
-
-                    <router-link :to="'/detail/' + data[0]"> <el-button text class="button">点击查看</el-button>
-                    </router-link>
-
-                  </div>
-                </div>
+                <router-link :to="'/detail/' + data[0]"> <el-button type="primary" text="primary">点击查看</el-button>
+                </router-link>
               </div>
             </el-card>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+          </el-col>
+          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+            <div class="example-pagination-block">
+              <el-pagination layout="prev, pager, next" :total="successful.length" :page-size="10"
+                v-model:current-page="page" />
+            </div>
+          </el-col>
+        </el-row>
 
-        <div class="example-pagination-block" style="margin-left: 30%;">
-          <el-pagination layout="prev, pager, next" :total="successful.length" :page-size="10"
-            v-model:current-page="page" />
-        </div>
       </el-main>
     </el-container>
 
@@ -175,3 +194,36 @@ watch([v_brand, v_category, v_colorway, v_features, v_tags], ([a, b], [c, d]) =>
 
 
 </script>
+<style>
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+
+.image {
+  width: 180px;
+  height: 230px;
+}
+
+.card {
+  margin-top: 2%;
+  width: 220px;
+  height: 360px;
+}
+
+.example-pagination-block+.example-pagination-block {
+  margin-top: 10px;
+}
+
+.example-pagination-block .example-demonstration {
+  margin-bottom: 16px;
+}
+.color{
+  color: rgb(172, 163, 169);
+ 
+}
+</style>

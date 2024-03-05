@@ -1,35 +1,56 @@
 <template>
-    <el-input v-model="name" placeholder="Please input name" @change="(_: string) => name_search()" style="width: 30%;" />
-    <button @click="name_search">查询</button>
-
-
+     <el-alert title="请谨慎进行删除！" type="error" effect="dark" />
+     <br>
     <el-row>
-        <el-col v-for="data in newdata " :key="data[1]" :span="6" :offset="2" style=" margin-bottom: 5%; margin-left: 5%;">
-            <el-card shadow="always" style="height: 100%; width: 110%;">
-                <div style="padding: 0px;font-size: 100%; ">{{ data[1] }}</div>
-                <el-image style="height: 100%;width: 100%;" :src="data[7]" class="image" />
-                <div style="height: 15%;">
-                    <span style="font-size: 15%;">brand</span>
-                    <span style="font-size: 15%; margin-left: 40%;">category</span>
+        <el-col :xs="12" :sm="2" :md="2" :lg="5" :xl="1">
+            <el-input v-model="name" placeholder="Please input name" />
+        </el-col>
+        <el-col :xs="2" :sm="12" :md="12" :lg="2" :xl="1">
+            <el-button @click="name_search" type="primary">查询</el-button>
+        </el-col>
 
-                    <div style="height: 0%;">
-                        <span style="font-size: 15%;height: 5%;">{{ data[3] }}</span>
-                        <span style="font-size: 15%;margin-left:60%;">{{ data[2] }}</span>
-                        <div style="text-align: center;">
+    </el-row>
+    <el-row>
+        <el-col v-for="data in newdata " :key="data[1]" :offset="0.5" :xs="12" :sm="8" :md="6" :lg="5" :xl="1">
+            <el-card shadow="always" class="card">
+                <div style=" text-align: center;">{{ data[1] }}</div>
+                <el-image :src="data[7]" class="image" />
+                <el-row :gutter="2">
+                    <el-col class="color" :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                        <div>brand</div>
+                    </el-col>
+                    <el-col class="color" :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                        <div>category</div>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="2">
+                    <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                        <div>{{ data[3] }}</div>
+                    </el-col>
+                    <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+                        <div>{{ data[2] }}</div>
+                    </el-col>
+                </el-row>
+                <div style="text-align: center;">
 
-                            <el-button @click="remove(data[1])" text class="button">点击进行删除</el-button>
-
-                        </div>
-                    </div>
+                    <el-button @click="remove(data[1])" type="danger">点击进行删除</el-button>
                 </div>
             </el-card>
         </el-col>
     </el-row>
-    <div class="example-pagination-block" style="margin-left: 30%; bottom: 10%;">
-        <el-pagination layout="prev, pager, next" :total="successful.length" :page-size="10" v-model:current-page="page" />
-    </div>
+    <el-row>
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+        </el-col>
+        <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+            <div class="example-pagination-block">
+                <el-pagination layout="prev, pager, next" :total="successful.length" :page-size="10"
+                    v-model:current-page="page" />
+            </div>
+        </el-col>
+    </el-row>
 </template>
 <script lang="ts" setup>
+import router from '@/router';
 import axios from 'axios';
 import { computed, onBeforeMount, ref } from 'vue';
 
@@ -37,7 +58,11 @@ const name = ref('')
 const successful = ref('')
 const page = ref(1)
 
+onBeforeMount(() => {
+  name_search()
 
+
+})
 
 const newdata = computed(() => {
     return successful.value.slice((page.value - 1) * 10, page.value * 10 - 1)
@@ -68,4 +93,35 @@ async function remove(name: string) {
         name_search()
     }
 }
+function back() {
+  router.push('/adminstration')
+}
 </script>
+<style>
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+
+.image {
+  width: 180px;
+  height: 230px;
+}
+
+.card {
+  margin-top: 2%;
+  width: 220px;
+  height: 360px;
+}
+
+.example-pagination-block+.example-pagination-block {
+  margin-top: 10px;
+}
+
+.example-pagination-block .example-demonstration {
+  margin-bottom: 16px;
+}</style>

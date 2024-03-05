@@ -148,9 +148,9 @@ import axios from 'axios';
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router';
 import { Edit, Search, Share, Upload } from '@element-plus/icons-vue'
-import { userInfo } from 'os';
 
 
+const route = useRoute()
 const audit_data = ref([])
 const page = ref(1)
 
@@ -274,7 +274,7 @@ function click() {
 
 
 
-const route = useRoute()
+
 async function insert() {
   console.log("route:", route)
   user.value = route.query.user?.toString() as string
@@ -300,9 +300,9 @@ async function insert() {
   f.append("length", length.value)
   f.append("note", note.value)
   f.append("audit", aduit)
-  f.append("auditor", user)
+  f.append("auditor", user.value)
   f.append("submit", submit)
-  f.append("submitter", user)
+  f.append("submitter", user.value)
 
 
   let res = await axios.post("http://localhost:8888/insert", f, {

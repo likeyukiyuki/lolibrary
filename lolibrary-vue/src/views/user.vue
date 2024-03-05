@@ -3,11 +3,16 @@
     <el-container>
 
       <el-header>
-        <el-page-header @back="back">
+        <el-row >
+          <el-col>
+            <el-page-header @back="back">
           <template #content>
             <span class="text-large font-600 mr-3">欢迎亲爱的 {{ user }} 用户界面来到用户操作页面 ━(*｀∀´*)ノ亻! </span>
           </template>
         </el-page-header>
+          </el-col>
+        </el-row>
+        
       </el-header>
       <el-container>
         <el-aside width="15%">

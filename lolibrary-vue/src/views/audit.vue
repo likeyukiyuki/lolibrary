@@ -9,72 +9,52 @@
             </el-header>
             <el-container>
                 <el-aside width="40%">
-                    <el-image style="width: 100%; height: 60%" :src="url" :fit="fit" />
+                    <el-image class="image" :src="url" :fit="fit" />
 
-                    <div style="color: darkgray;">该信息由<b>{{ submitter }}</b>提供,由<b>{{ aduit }}</b>审核</div>
+                    <div style="color: darkgray;">该信息由<b>{{ submitter }}</b>提供,还未进行审核</div>
 
                 </el-aside>
                 <el-main>
-                    <div id="item">
-                        <h3>详细信息</h3><br />
-                        发售于{{ year }} 年
-                        <br>
-                        生产编号：{{ product }}
-                        <br>
-                        价格：{{ price }}
-                    </div>
-                    <div id="size information">
-                        <h3>胸围</h3>
-                        {{ bust }}cm
-                        <br>
-                        <h3>腰围</h3>
-                        {{ waist }}cm
-                        <br>
-                        <h3>裙长</h3>
-                        {{ length }}cm
-                    </div>
-                    <div id="brand">
-                        <h3>品牌</h3>
-                        {{ brand }}
-                    </div>
-                    <div id="category">
-                        <h3>分类</h3>
-                        {{ category }}
-                    </div>
-                    <div id="features">
-                        <h3>特征</h3>
-                        {{ features }}
-                    </div>
-                    <div id="colorway">
-                        <h3>颜色</h3>
-                        {{ colorway }}
-                    </div>
-                    <div id="tags">
-                        <h3>标签</h3>
-                        {{ tags }}
-                    </div>
-
+                    <el-descriptions title="详细信息如下：" direction="vertical" :column="1" border>
+                        <el-descriptions-item label="发售时间：">发售于{{ year }} 年</el-descriptions-item>
+                        <el-descriptions-item label="生产编号：">{{ product }}</el-descriptions-item>
+                        <el-descriptions-item label="胸围：">{{ bust }}cm</el-descriptions-item>
+                        <el-descriptions-item label="腰围：">{{ waist }}cm</el-descriptions-item>
+                        <el-descriptions-item label="裙长：">{{ length }}cm</el-descriptions-item>
+                        <el-descriptions-item label="品牌：">{{ brand }}</el-descriptions-item>
+                        <el-descriptions-item label="分类：">{{ category }}</el-descriptions-item>
+                        <el-descriptions-item label="特征：">{{ features }}</el-descriptions-item>
+                        <el-descriptions-item label="颜色：">{{ colorway }}</el-descriptions-item>
+                        <el-descriptions-item label="标签：">{{ tags }}</el-descriptions-item>
+                        <el-descriptions-item label="特殊说明：">{{ note }}</el-descriptions-item>
+                    </el-descriptions>
                 </el-main>
 
             </el-container>
         </el-container>
         <el-container direction="horizontal">
             <el-footer style="width: 100%; height: 20%;">
-                <div v-for="item in imageslist " style="float: left;">
-                    <el-image style="width: 150px; height: 200px" :src="item" :fit="fit"></el-image>
+                <el-row>
 
-                </div>
+                    <el-card v-for="item in imageslist " shadow="always">
+                        <el-image :src="item" class="imagelist" />
+                    </el-card>
+                </el-row>
+                <el-row>
+                    <div style="margin: auto;">
+                        <el-button :style="{ color: buttonTextColor }" style="float: left;"
+                            @click="audit()">点击通过审核</el-button>
+                        <div v-if="buttonTextColor == 'green'">
+                            <el-button type="success" :icon="Check" circle />
+                        </div>
+                    </div>
+                    {{ maessage }}
+                </el-row>
 
             </el-footer>
 
         </el-container>
-        <div style="margin: auto;">
-            <el-button :style="{ color: buttonTextColor }" style="float: left;" @click="audit()">点击通过审核</el-button>
-            <div v-if="buttonTextColor == 'green'">
-                <el-button type="success" :icon="Check" circle />
-            </div>
-        </div>
-        {{ maessage }}
+
     </div>
 </template>
   
@@ -95,7 +75,7 @@ const url = ref('')
 
 const imageslist = ref([])
 const name = ref("")
-const maessage=ref("")
+const maessage = ref("")
 const successful = ref([])
 const year = ref('')
 const product = ref('')
@@ -125,7 +105,7 @@ const changeColor = () => {
 };
 
 async function detail_search() {
-   
+
     console.log("detail_search route", route.params)
     const id = route.params.id
     let res = await axios.post("http://localhost:8888/detail_search",
@@ -158,20 +138,29 @@ async function detail_search() {
 async function audit() {
 
     const id = route.params.id
-    const auditor=route.params.user
-    console.log("a",auditor)
+    const auditor = route.params.user
+    console.log("a", auditor)
     let res = await axios.post("http://localhost:8888/audit",
         {
             id: id,
-            auditor:auditor
+            auditor: auditor
         }
     )
     if (res.status == 200) {
-        maessage.value=res.data
+        maessage.value = res.data
         changeColor()
-    } 
-   
     }
-</script>
 
+}
+</script>
+<style>
+.imagelist{
+    width: 150px;
+    height: 200px;
+}
+.image{
+    width: 100%; 
+    height: 60%;
+}
+</style>
 
