@@ -10,37 +10,37 @@
             </div>
           </template>
           <label>类型:</label>
-          <el-select v-model="v_category" clearable allow-create="true" filterable placeholder="选择类型">
+          <el-select v-model="v_category" clearable allow-create="true" multiple filterable  placeholder="选择类型">
             <el-option v-for="item in category" :key="item.value" :value="item.value" />
           </el-select>
           <br>
           <br>
           <label>品牌:</label>
-          <el-select v-model="v_brand" clearable allow-create="true" filterable placeholder="选择品牌">
+          <el-select v-model="v_brand" clearable allow-create="true" multiple filterable placeholder="选择品牌">
             <el-option v-for="item in brand" :key="item.value" :value="item.value" />
           </el-select>
           <br>
           <br>
           <label>特点:</label>
-          <el-select v-model="v_features" clearable allow-create="true" filterable placeholder="选择特点">
+          <el-select v-model="v_features" clearable allow-create="true" multiple filterable placeholder="选择特点">
             <el-option v-for="item in features" :key="item.value" :value="item.value" />
           </el-select>
           <br>
           <br>
           <label>配色:</label>
-          <el-select v-model="v_colorway" clearable allow-create="true" filterable placeholder="选择配色">
+          <el-select v-model="v_colorway" clearable allow-create="true" multiple filterable placeholder="选择配色">
             <el-option v-for="item in colorway" :key="item.value" :value="item.value" />
           </el-select>
           <br>
           <br>
           <label>标签:</label>
-          <el-select v-model="v_tags" clearable allow-create="true" filterable placeholder="选择标签">
+          <el-select v-model="v_tags" clearable allow-create="true" multiple filterable placeholder="选择标签">
             <el-option v-for="item in tags" :key="item.value" :value="item.value" />
           </el-select>
           <br>
           <br>
           <label>年份:</label>
-          <el-select v-model="years" clearable allow-create="true" filterable placeholder="选择年份">
+          <el-select v-model="years" clearable allow-create="true" multiple filterable placeholder="选择年份">
             <el-option v-for="item in getyears" :key="item.value" :value="item.value" />
           </el-select>
         </el-card>
@@ -88,7 +88,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
+          <el-col :xs="12" :sm="12" :md="12" :lg="9" :xl="1">
           </el-col>
           <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="1">
             <div class="example-pagination-block">
@@ -116,17 +116,17 @@ import axios from 'axios';
 
 const labelPosition = ref<FormProps['labelPosition']>('right')
 const value3: Ref<Date> = ref(new Date())
-const v_category = ref('')
+const v_category = ref([])
 const name = ref('')
 const category = [{ value: 'jsk' }, { value: 'op' }, { value: 'sk' }, { value: '胸衣' }, { value: '大衣' }, { value: '伞' }, { value: '小物' }]
 const v_brand = ref('')
-const brand = [{ value: 'ap' }, { value: 'baby' }, { value: 'etc' }, { value: '古典玩偶' }]
+const brand = [{ value: 'ap' }, { value: 'baby' }, { value: 'etc' }, { value: '古典玩偶' },{value:'etc'},{value:'anp'},{value:'rs'},{value:'婴梵塔'},{value:'魔法茶会'}]
 const v_features = ref('')
-const features = [{ value: '有素鸡' }, { value: '袖子可拆卸' }, { value: '姬袖' }, { value: '挂脖' }, { value: '开襟' }]
+const features = [{ value: '有素鸡' }, { value: '袖子可拆卸' }, { value: '姬袖' }, { value: '挂脖' }, { value: '开襟' },{value:'带纱'},{value:'泡泡袖'},{value:'烫金'},{value:'花瓣摆'}]
 const v_colorway = ref('')
-const colorway = [{ value: '浅粉色' }, { value: '芭比粉' }, { value: '生成色' }, { value: '黑色' }]
+const colorway = [{ value: '浅粉色' }, { value: '芭比粉' }, { value: '生成色' }, { value: '黑色' },{value:'黄色'},{value:'若草色'},{value:'sax色'},{value:'bb蓝'},{value:'香槟金'}]
 const v_tags = ref('')
-const tags = [{ value: '纯色' }, { value: '柄图：草莓' }, { value: '柄图：云' }, { value: '面料：丝绒' }, { value: '细节：钻石' }]
+const tags = [{ value: '纯色' },{value:'纯色：波点'},{value:'纯色：蕾丝'}, { value: '柄图：草莓' }, { value: '柄图：云' },{value:'柄图：天鹅'}, { value: '面料：丝绒' }, {value:'柄图：棉布'},{ value: '细节：钻石' }]
 const successful = ref([])
 const page = ref(1)
 
@@ -187,14 +187,14 @@ watch(name, (name, newname) => {
   name_search()
 })
 
-watch([v_brand, v_category, v_colorway, v_features, v_tags], ([a, b], [c, d]) => {
+watch([v_brand, v_category, v_colorway, v_features, v_tags,years], ([a, b], [c, d]) => {
   search()
 })
 
 
 
 </script>
-<style>
+<style scoped>
 .el-col {
   border-radius: 4px;
 }

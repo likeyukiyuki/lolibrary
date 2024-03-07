@@ -153,7 +153,7 @@ async function audit() {
 
 }
 </script>
-<style>
+<style scoped>
 .imagelist{
     width: 150px;
     height: 200px;

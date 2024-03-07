@@ -2,7 +2,7 @@
     <div class="common-layout">
         <el-container>
             <el-header>
-            
+
                 <div id="name" style="font-size: 200%; text-align: center; ">
                     {{ name }}
 
@@ -39,11 +39,11 @@
         <el-container direction="horizontal">
             <el-footer style="width: 100%; height: 20%;">
                 <el-row>
-                   
-                        <el-card v-for="item in imageslist " shadow="always">
-                            <el-image :src="item" class="imagelist" />
-                        </el-card>
-                    
+
+                    <el-card v-for="item in imageslist " shadow="always">
+                        <el-image :src="item" class="imagelist" />
+                    </el-card>
+
                 </el-row>
             </el-footer>
         </el-container>
@@ -78,7 +78,7 @@ const note = ref('')
 const data = ref([])
 const submitter = ref('')
 const aduit = ref('')
-
+const colorlist = ref<string[]>()
 onBeforeMount(() => {
     detail_search()
 })
@@ -101,6 +101,8 @@ async function detail_search() {
         category.value = data.value[2]
         brand.value = data.value[3]
         colorway.value = data.value[4]
+        
+        colorlist.value = colorway.value.split('，')
         features.value = data.value[5]
         tags.value = data.value[6]
         url.value = data.value[7]
@@ -117,10 +119,11 @@ async function detail_search() {
     }
 }
 
+
 </script>
 
 
-<style>
+<style scoped>
 .el-descriptions {
     margin-top: 20px;
     size: 32px;

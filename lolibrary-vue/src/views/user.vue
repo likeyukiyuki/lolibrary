@@ -186,7 +186,7 @@
                         <span style="font-size: 15%;height: 5%;">{{ data[3] }}</span>
                         <span style="font-size: 15%;margin-left:60%;">{{ data[2] }}</span>
                         <div style="text-align: center;">
-                          <router-link :to="'/audit/' + data[0]"> <el-button text class="button">点击查看</el-button>
+                          <router-link :to="'/detail/' + data[0]"> <el-button text class="button">点击查看</el-button>
                           </router-link>
                         </div>
                       </div>
@@ -220,7 +220,7 @@
                         <span style="font-size: 15%;height: 5%;">{{ data[3] }}</span>
                         <span style="font-size: 15%;margin-left:60%;">{{ data[2] }}</span>
                         <div style="text-align: center;">
-                          <router-link :to="'/audit/' + data[0]"> <el-button text class="button">点击查看</el-button>
+                          <router-link :to="'/detail/' + data[0]"> <el-button text class="button">点击查看</el-button>
                           </router-link>
                         </div>
                       </div>

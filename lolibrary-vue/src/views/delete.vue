@@ -97,7 +97,7 @@ function back() {
   router.push('/adminstration')
 }
 </script>
-<style>
+<style scoped>
 .el-col {
   border-radius: 4px;
 }

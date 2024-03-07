@@ -24,12 +24,13 @@ app.add_middleware(
 # conn = sqlite3.connect('test.db')
 # print ("数据库打开成功")
 # c = conn.cursor()
-# c.execute('''CREATE TABLE images
-#         (
+# c.execute('''CREATE TABLE new_images (
 #         id text(50) PRIMARY KEY,
 #         dress_id text(50) not null,
-#         images BLOB not null
-#         );''')
+#         images BLOB not null,
+#         foreign key(dress_id) references dress(id)
+   
+# );''')
 # print ("数据表创建成功")
 # conn.commit()
 # conn.close()
@@ -87,12 +88,12 @@ class name_searchInfo(BaseModel):
     onlyname:str
 
 class searchInfo(BaseModel):
-      scategory:str|None=Form()
-      sbrand:str|None=Form()
-      sfeatures:str|None=Form()
-      scolorway:str|None=Form()
-      stags:str|None=Form()
-      syears:str|None=Form()
+      scategory:list[str]
+      sbrand:list[str]
+      sfeatures:list[str]
+      scolorway:list[str]
+      stags:list[str]
+      syears:list[str]
 
 class loginInfo(BaseModel):
     user:str
@@ -161,6 +162,7 @@ async def detail_search(info:detail_searchInfo):
     print(len(rtdata))
     return rtdata
 
+
 # sbrand:str|None=Form(),scategory:str|None=Form(),sfeatures:str|None=Form(),
 #                  scolorway:str|None=Form(),stags:str|None=Form(),syears:str|None=Form()
 
@@ -168,13 +170,17 @@ async def detail_search(info:detail_searchInfo):
 async def search(info:searchInfo):
     slist=[("brand",info.sbrand),("category",info.scategory),("features",info.sfeatures),
            ("colorway",info.scolorway),("tags",info.stags),("years",info.syears)]
+    print(slist)
     conn = sqlite3.connect('test.db')
     c=conn.cursor()
     print ("数据库打开成功")
-    sql="select * from dress where audit='1' and 1"
+    ja=""
+    sql="select * from dress where audit='1'  and 1"
     for (i,j) in slist:
-        if j != "":
-            sql += f" and {i} = '{j}' "
+        if len(j) >0 :
+            for n in j:
+                 ja+=f" or {i}='{n}' "
+            sql += f" and (false{ja})  "
     print(sql)
     data=c.execute(sql).fetchall()
     rtdata=[]
