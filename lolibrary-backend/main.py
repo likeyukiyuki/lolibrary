@@ -9,6 +9,17 @@ import cv2
 import base64
 from typing import Optional
 
+
+
+
+
+
+
+
+
+
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -166,6 +177,24 @@ async def detail_search(info:detail_searchInfo):
 # sbrand:str|None=Form(),scategory:str|None=Form(),sfeatures:str|None=Form(),
 #                  scolorway:str|None=Form(),stags:str|None=Form(),syears:str|None=Form()
 
+def generate_sql_query(data_list):
+    conditions = []
+    for item in data_list:
+        field = item[0]
+        values = item[1]
+        if values:
+            for select in values:
+                quoted_values = [f"'{value}'" for value in values]
+                condition = f"{field} IN ({','.join(quoted_values)})"
+            conditions.append(condition)
+    query = "SELECT * FROM dress"
+    if conditions:
+        query += " WHERE " + " and ".join(conditions)
+    return query
+    
+
+
+
 @app.post("/search")
 async def search(info:searchInfo):
     slist=[("brand",info.sbrand),("category",info.scategory),("features",info.sfeatures),
@@ -174,14 +203,7 @@ async def search(info:searchInfo):
     conn = sqlite3.connect('test.db')
     c=conn.cursor()
     print ("数据库打开成功")
-    ja=""
-    sql="select * from dress where audit='1'  and 1"
-    for (i,j) in slist:
-        if len(j) >0 :
-            for n in j:
-                 ja+=f" or {i}='{n}' "
-            sql += f" and (false{ja})  "
-    print(sql)
+    sql=generate_sql_query(slist)
     data=c.execute(sql).fetchall()
     rtdata=[]
         
